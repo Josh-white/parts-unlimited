@@ -14,16 +14,19 @@ describe("inventory", () => {
     it('should be able to increase the quantity of items', () => {
       cy.visit("http://localhost:8080");
       cy.findByRole('button', {name: "Increase"}).click()
-      cy.findByLabelText("Current Inventory").contains('1')
+      cy.findByRole('button', {name: "Increase"}).click()
+      cy.findByLabelText("Current Inventory").contains('2')
+      cy.findByRole('button', {name: 'Save'}).click()
     });
 
     it('should show place order information', () => {
       cy.visit("http://localhost:8080");
       cy.findByRole('button', {name: "More"}).click()
-      cy.findByLabelText("Order Amount").contains('1')
+      cy.findByRole('button', {name: "More"}).click()
+      cy.findByLabelText("Order Amount").contains('2')
       cy.findByRole('button', {name: "Less"}).click()
       cy.findByRole('button', {name: "Place Order"}).click()
-
+      cy.findByRole('alert').contains('Congrats you ordered 1 of shiny-new-product')
     });
 
   });

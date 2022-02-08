@@ -8,12 +8,16 @@ jest.mock("../../productsApiClient");
 
 const mockChangeQuantity = changeQuantity as jest.MockedFunction<typeof changeQuantity>;
 
-describe("when I view the inventory", () => {
+describe("when I view the inventory with zero quantity", () => {
+
+  beforeEach(() => {
+    const createAlertMessage = jest.fn()
+    const product = {id: 1, name: "a product", quantity: 0};
+    render(<ProductDisplay product={product} createAlertMessage={createAlertMessage}/>);
+
+  })
 
   it("should display the products and inventory", async () => {
-
-    const product = {id: 1, name: "a product", quantity: 0};
-    render(<ProductDisplay product={product}/>);
 
     expect(await screen.findByText("a product")).toBeInTheDocument();
     const currentInventory = await screen.getAllByLabelText('Current Inventory')
@@ -22,75 +26,55 @@ describe("when I view the inventory", () => {
 
   it('should display a button to increase the quantity and save amount', () => {
 
-
-    const product = {id: 1, name: "a product", quantity: 0};
-    render(<ProductDisplay product={product}/>);
-
     expect(screen.getByRole('button', {name: 'Increase'})).toBeVisible()
     expect(screen.getByRole('button', {name: 'Save'})).toBeVisible()
   });
 
   it('should increase the quantity when Increase button is clicked', async () => {
 
-    const product = {id: 1, name: "a product", quantity: 0};
-    render(<ProductDisplay product={product}/>);
-
     const currentInventory = await screen.getAllByLabelText('Current Inventory')
     expect(currentInventory[0].innerHTML).toContain('0')
     userEvent.click(screen.getByRole('button', {name: 'Increase'}))
-    expect(await screen.getByText('1')).toBeVisible()
+    expect(currentInventory[0].innerHTML).toContain('1')
   });
+});
 
-  it('should save the amount of product when save is clicked', async () => {
-    mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 2})
-    const product = {id: 1, name: "a product", quantity: 0};
+describe('saving information', () => {
 
-    render(<ProductDisplay product={product}/>);
-
-    userEvent.click(screen.getByRole('button', {name: 'Increase'}))
-    userEvent.click(screen.getByRole('button', {name: 'Save'}))
-    expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
-  });
+  beforeEach(() => {
+    const product = {id: 1, name: "a product", quantity: 2};
+    const createAlertMessage = jest.fn()
+    render(<ProductDisplay product={product} createAlertMessage={createAlertMessage}/>);
+  })
 
   it('should show a default amount and buttons to increase, decrease, and place order', async () => {
-    const product = {id: 1, name: "a product", quantity: 2};
-
-    render(<ProductDisplay product={product}/>);
 
     const orderAmount = await screen.findAllByLabelText('Order Amount')
-    expect(orderAmount[0].innerHTML).toContain('Order 0')
+    expect(orderAmount[0].innerHTML).toContain('Order: 0')
     expect(screen.getByRole('button', {name: 'More'})).toBeVisible()
     expect(screen.getByRole('button', {name: 'Less'})).toBeVisible()
     expect(screen.getByRole('button', {name: 'Place Order'})).toBeVisible()
   });
 
   it('should change order amount when more or less is clicked', async () => {
-    const product = {id: 1, name: "a product", quantity: 2};
-
-    render(<ProductDisplay product={product}/>);
 
     userEvent.click(screen.getByRole('button', {name: 'More'}))
     const orderAmount = await screen.findAllByLabelText('Order Amount')
-    expect(orderAmount[0].innerHTML).toContain('Order 1')
+    expect(orderAmount[0].innerHTML).toContain('Order: 1')
     userEvent.click(screen.getByRole('button', {name: 'Less'}))
-    expect(orderAmount[0].innerHTML).toContain('Order 0')
+    expect(orderAmount[0].innerHTML).toContain('Order: 0')
   });
 
   it('should not allow order amount to go below 0', async () => {
-    const product = {id: 1, name: "a product", quantity: 2};
 
-    render(<ProductDisplay product={product}/>);
     userEvent.click(screen.getByRole('button', {name: 'Less'}))
 
     const orderAmount = await screen.findAllByLabelText('Order Amount')
-    expect(orderAmount[0].innerHTML).toContain('Order 0')
+    expect(orderAmount[0].innerHTML).toContain('Order: 0')
   });
 
   it('should place an order if that amount is in stock', async () => {
     mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 1})
-    const product = {id: 1, name: "a product", quantity: 2};
-
-    render(<ProductDisplay product={product}/>);
 
     act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
     act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
@@ -105,16 +89,18 @@ describe("when I view the inventory", () => {
 
     expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
   });
+});
 
   it('should pop an alert when an order is placed with the amount ordered', () => {
     mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 1})
+    const createAlertMessage = jest.fn()
     const product = {id: 1, name: "a product", quantity: 2};
 
-    render(<ProductDisplay product={product}/>);
+    render(<ProductDisplay product={product} createAlertMessage={createAlertMessage}/>);
 
     act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
     act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
 
-    expect(screen.getByRole('dialog', {name: 'success'})).toContain('Congrats you ordered 1 of a product')
+    expect(createAlertMessage).toHaveBeenCalledTimes(1)
   });
-});
+

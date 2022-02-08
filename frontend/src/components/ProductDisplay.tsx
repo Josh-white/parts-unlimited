@@ -1,13 +1,14 @@
-import {Alert, Box, Button} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import React, {useState} from "react";
 import {Product} from "../product";
 import {changeQuantity} from "../productsApiClient";
 
 type ProductDisplayProps = {
   product: Product
+  createAlertMessage: (message: string) => void
 }
 
-export const ProductDisplay = ({product}: ProductDisplayProps) => {
+export const ProductDisplay = ({product, createAlertMessage}: ProductDisplayProps) => {
   const [quantity, setQuantity] = useState(product.quantity)
   const [orderAmount, setOrderAmount] = useState(0)
 
@@ -28,11 +29,7 @@ export const ProductDisplay = ({product}: ProductDisplayProps) => {
   }
 
   function orderPlaced(orderedAmount: number, productName: string) {
-    return (
-      <Alert variant={"filled"} severity={"success"}>
-        {`Congrats you ordered ${orderedAmount} of ${productName}`}
-      </Alert>
-    );
+    createAlertMessage(`Congrats you ordered ${orderedAmount} of ${productName}`)
   }
 
   const placeOrder = () => {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {getProducts} from "./productsApiClient";
-import {Box, Container} from "@mui/material";
+import {Alert, Box, Container} from "@mui/material";
 import {Product} from "./product";
 import {ProductCreator} from "./components/ProductCreator";
 import {ProductDisplay} from "./components/ProductDisplay";
@@ -8,9 +8,16 @@ import {ProductDisplay} from "./components/ProductDisplay";
 const App = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [dirtyState, setDirtyState] = useState(0)
+  const [alert, setAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const refresh = () => {
     setDirtyState(prevState => prevState + 1)
+  }
+
+  const createAlertMessage = (message: string) => {
+    setAlertMessage(message)
+    setAlert(true)
   }
 
   useEffect(() => {
@@ -38,8 +45,11 @@ const App = () => {
         </Box>
         <Box>
           {products.map((product) => (
-            <ProductDisplay key={product.id} product={product}/>
+            <ProductDisplay key={product.id} product={product} createAlertMessage={createAlertMessage}/>
           ))}
+        </Box>
+        <Box>
+          {alert ? <Alert onClose={() => setAlert(false)} variant={"filled"} severity={"success"}> {alertMessage}</Alert> : <></>}
         </Box>
         <Box display='flex' flexDirection='row'>
           <Box>
