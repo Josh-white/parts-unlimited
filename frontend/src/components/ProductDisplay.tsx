@@ -28,8 +28,9 @@ export const ProductDisplay = ({product, createAlertMessage}: ProductDisplayProp
     }
   }
 
-  function orderPlaced(orderedAmount: number, productName: string) {
-    createAlertMessage(`Congrats you ordered ${orderedAmount} of ${productName}`)
+  function orderPlaced(orderedAmount: number, productName: string, remainingInventory: boolean) {
+    remainingInventory ? createAlertMessage(`Congrats you ordered ${orderedAmount} of ${productName}`) :
+      createAlertMessage(`your order was partially fill with ${orderedAmount} of ${productName}`)
   }
 
   const placeOrder = () => {
@@ -37,8 +38,11 @@ export const ProductDisplay = ({product, createAlertMessage}: ProductDisplayProp
       const newQuantity = quantity - orderAmount
       changeQuantity(product.id, newQuantity)
         .then(() => setQuantity(newQuantity))
-        orderPlaced(newQuantity, product.name)
-
+        orderPlaced(newQuantity, product.name, true)
+    } else if (orderAmount >= quantity) {
+      changeQuantity(product.id, 0)
+        .then(() => setQuantity(0))
+      orderPlaced(quantity, product.name, false)
     }
   }
 

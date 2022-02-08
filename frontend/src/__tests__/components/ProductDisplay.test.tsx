@@ -90,8 +90,9 @@ describe('saving information', () => {
     expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
   });
 });
+describe('ordering', () => {
 
-  it('should pop an alert when an order is placed with the amount ordered', () => {
+  it('should pop an alert when an order is placed with the amount ordered and full order is in stock', () => {
     mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 1})
     const createAlertMessage = jest.fn()
     const product = {id: 1, name: "a product", quantity: 2};
@@ -102,5 +103,28 @@ describe('saving information', () => {
     act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
 
     expect(createAlertMessage).toHaveBeenCalledTimes(1)
+    expect(createAlertMessage).toHaveBeenCalledWith('Congrats you ordered 1 of a product')
+    expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
+    expect(mockChangeQuantity).toHaveBeenCalledWith(1, 1)
   });
+
+  it('should pop an alert when an order is completed but not fully fulfilled', () => {
+    mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 0})
+    const createAlertMessage = jest.fn()
+    const product = {id: 1, name: "a product", quantity: 2};
+
+    render(<ProductDisplay product={product} createAlertMessage={createAlertMessage}/>);
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
+
+    expect(createAlertMessage).toHaveBeenCalledTimes(1)
+    expect(createAlertMessage).toHaveBeenCalledWith('your order was partially fill with 2 of a product')
+    expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
+    expect(mockChangeQuantity).toHaveBeenCalledWith(1, 0)
+
+  });
+})
+
 
