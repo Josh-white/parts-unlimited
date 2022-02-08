@@ -22,7 +22,7 @@ internal class ProductServiceTest {
 
     @Test
     fun `should retrieve all products`() {
-        val expectedProducts = listOf(Product(1L, "first-product", 0), Product(2L, "second-product", 0))
+        val expectedProducts = listOf(Product(1L, "first-product", 0), Product(2L, "second-product", 0, 0))
         every { productRepository.findAll() } returns expectedProducts
 
         val actualProducts: List<Product> = productService.getProducts()
@@ -38,7 +38,7 @@ internal class ProductServiceTest {
 
         productService.addProduct(productName)
 
-        verify { productRepository.save(productToSave) }
+        verify { productRepository.save(productToSave.copy(id = 1, modelNumber = 0)) }
     }
 
     @Test
@@ -52,7 +52,7 @@ internal class ProductServiceTest {
         verify(exactly = 1) { productRepository.findByIdOrNull(1L) }
         verify(exactly = 1) { productRepository.save(Product(1, "first-product", 3)) }
 
-        assertThat(result).isEqualTo(Product(1, "first-product", 3))
+        assertThat(result).isEqualTo(Product(1, "first-product", 3, 0))
 
     }
 }
