@@ -21,9 +21,22 @@ const App = () => {
     <Container sx={{mx: 1, my: 1}}>
       <h1>Parts Unlimited Inventory</h1>
       {/*TODO figure out how to get these into two columns*/}
-      <Box display={'flex'} flexDirection={'column'}>
+      <Box>
         <Box display='flex' flexDirection='row'>
-        <ProductDisplay products={products}/>
+          <Box alignItems={"center"}>
+            <h2>Product</h2>
+          </Box>
+          <Box ml={2}>
+            <h2>Quantity</h2>
+          </Box>
+          <Box ml={2}>
+            <h2>Add Quantity</h2>
+          </Box>
+          <Box display='flex' flexDirection='row'>
+          {products.map((product) => (
+            <ProductDisplay product={product}/>
+          ))}
+          </Box>
         </Box>
         <Box display='flex' flexDirection='row'>
           <Box>

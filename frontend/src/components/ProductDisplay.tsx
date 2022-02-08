@@ -1,26 +1,36 @@
-import {Box} from "@mui/material";
-import React from "react";
+import {Box, Button} from "@mui/material";
+import React, {useState} from "react";
 import {Product} from "../product";
+import {addQuantity} from "../productsApiClient";
 
 type ProductDisplayProps = {
-  products: Product[]
+  product: Product
 }
 
-export const ProductDisplay = ({products}:ProductDisplayProps) => {
+export const ProductDisplay = ({product}: ProductDisplayProps) => {
+  const [quantity, setQuantity] = useState(product.quantity)
+
+  const increaseQuantity = () => {
+    setQuantity(prevState => prevState + 1)
+  }
+
+
+  const saveQuantity = () => {
+    addQuantity(product.id, quantity)
+  }
+
   return (
     <>
-    <Box>
-      <h2>Product</h2>
-      {products.map((product) => (
-        <div key={product.id}>{product.name}</div>
-      ))}
-    </Box>
-    <Box ml={2}>
-      <h2>Quantity</h2>
-      {products.map((product) => (
-        <div key={product.id}>{product.quantity}</div>
-      ))}
-    </Box>
-</>
-)
+      <Box>
+        {product.name}
+      </Box>
+      <Box>
+        {quantity}
+      </Box>
+      <Box>
+        <Button onClick={() => increaseQuantity()}>Increase</Button>
+        <Button sx={{marginLeft: '1em'}} onClick={() => saveQuantity()}>Save</Button>
+      </Box>
+    </>
+  )
 }
