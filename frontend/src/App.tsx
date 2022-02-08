@@ -29,10 +29,10 @@ const App = () => {
           <Box ml={2}>
             <h2>Quantity</h2>
           </Box>
-          <Box ml={5}>
+          <Box ml={10}>
             <h2>Add Quantity</h2>
           </Box>
-          <Box ml={40}>
+          <Box ml={30}>
             <h2>Place Order</h2>
           </Box>
         </Box>

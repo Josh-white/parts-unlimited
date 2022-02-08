@@ -1,4 +1,4 @@
-import {render, screen} from "@testing-library/react";
+import {act, render, screen} from "@testing-library/react";
 import React from "react";
 import {ProductDisplay} from "../../components/ProductDisplay";
 import userEvent from "@testing-library/user-event";
@@ -6,7 +6,7 @@ import {changeQuantity} from "../../productsApiClient";
 
 jest.mock("../../productsApiClient");
 
-const mockAddQuantity = changeQuantity as jest.MockedFunction<typeof changeQuantity>;
+const mockChangeQuantity = changeQuantity as jest.MockedFunction<typeof changeQuantity>;
 
 describe("when I view the inventory", () => {
 
@@ -42,14 +42,14 @@ describe("when I view the inventory", () => {
   });
 
   it('should save the amount of product when save is clicked', async () => {
-    mockAddQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 2})
+    mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 2})
     const product = {id: 1, name: "a product", quantity: 0};
 
     render(<ProductDisplay product={product}/>);
 
     userEvent.click(screen.getByRole('button', {name: 'Increase'}))
     userEvent.click(screen.getByRole('button', {name: 'Save'}))
-    expect(mockAddQuantity).toHaveBeenCalledTimes(1)
+    expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
   });
 
   it('should show a default amount and buttons to increase, decrease, and place order', async () => {
@@ -84,7 +84,37 @@ describe("when I view the inventory", () => {
 
     const orderAmount = await screen.findAllByLabelText('Order Amount')
     expect(orderAmount[0].innerHTML).toContain('Order 0')
+  });
 
+  it('should place an order if that amount is in stock', async () => {
+    mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 1})
+    const product = {id: 1, name: "a product", quantity: 2};
 
+    render(<ProductDisplay product={product}/>);
+
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
+
+    expect(mockChangeQuantity).toHaveBeenCalledTimes(0)
+
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Less'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Less'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
+
+    expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
+  });
+
+  it('should pop an alert when an order is placed with the amount ordered', () => {
+    mockChangeQuantity.mockResolvedValueOnce({id: 1, name: 'a product', quantity: 1})
+    const product = {id: 1, name: "a product", quantity: 2};
+
+    render(<ProductDisplay product={product}/>);
+
+    act(() => userEvent.click(screen.getByRole('button', {name: 'More'})))
+    act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
+
+    expect(screen.getByRole('dialog', {name: 'success'})).toContain('Congrats you ordered 1 of a product')
   });
 });
