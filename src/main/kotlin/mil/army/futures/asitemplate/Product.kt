@@ -12,6 +12,6 @@ data class Product(
     val id: Long = 0,
 
     val name: String,
-
-    val quantity: Int
+    val quantity: Int,
+    val modelNumber: Int
 )
