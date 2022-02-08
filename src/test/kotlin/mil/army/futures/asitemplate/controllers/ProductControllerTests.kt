@@ -62,13 +62,22 @@ internal class ProductControllerTests {
     }
 
     @Test
-    fun `should say hi`() {
+    fun `should increase the quantity of a product`() {
+        every { productService.addQuantity(productId = 1L, quantity = 3) } returns Product(
+            id = 1L,
+            name = "first-product-name",
+            quantity = 3
+        )
 
-        mockMvc.get("/hi").andExpect {
+        mockMvc.post("/addQuantity/1/3") {
+            contentType = MediaType.TEXT_PLAIN
+        }.andExpect {
             status { isOk() }
-            content { string(containsString("hi")) }
+            content { string(containsString("3")) }
         }
 
+        verify(exactly = 1) {
+            productService.addQuantity(productId = 1L, quantity = 3)
+        }
     }
-
 }

@@ -28,8 +28,8 @@ const App = () => {
             <Box display='flex' flexDirection='row'>
                 <Box>
                     <h2>Product</h2>
-                    {products.map((product, index) => (
-                        <div key={index}>{product.name}</div>
+                    {products.map((product) => (
+                        <div key={product.id}>{product.name}</div>
                     ))}
                     <form onSubmit={submitForm}>
                         <br/>
@@ -42,8 +42,8 @@ const App = () => {
                 </Box>
                 <Box>
                     <h2>Quantity</h2>
-                    {products.map((product, index) => (
-                        <div key={index}>{product.quantity}</div>
+                    {products.map((product) => (
+                        <div key={product.id}>{product.quantity}</div>
                     ))}
                 </Box>
             </Box>

@@ -17,7 +17,7 @@ const addProduct = (product: string) => {
 describe("inventory", () => {
   describe("when I view the inventory", () => {
     it("should display the products", async () => {
-      mockGetProducts.mockResolvedValue([{name: "a product", quantity: 0}]);
+      mockGetProducts.mockResolvedValue([{id: 1, name: "a product", quantity: 0}]);
 
       render(<App/>);
 
@@ -27,7 +27,7 @@ describe("inventory", () => {
     });
 
     it("should display the products' quantities", async () => {
-      mockGetProducts.mockResolvedValue([{name: "a product", quantity: 0}]);
+      mockGetProducts.mockResolvedValue([{id: 1, name: "a product", quantity: 0}]);
 
       render(<App/>);
 
@@ -38,9 +38,9 @@ describe("inventory", () => {
 
   describe("when I add a new product", () => {
     it("should display the new product", async () => {
-      mockCreateProduct.mockResolvedValueOnce({name: "shiny new product", quantity: 0});
+      mockCreateProduct.mockResolvedValueOnce({id: 1, name: "shiny new product", quantity: 0});
       mockGetProducts.mockResolvedValueOnce([]);
-      mockGetProducts.mockResolvedValueOnce([{name: "shiny new product", quantity: 0}]);
+      mockGetProducts.mockResolvedValueOnce([{id: 1, name: "shiny new product", quantity: 0}]);
 
       render(<App/>);
       addProduct("shiny new product");

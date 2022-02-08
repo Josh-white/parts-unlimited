@@ -1,5 +1,5 @@
 import nock from 'nock';
-import {createProduct, getProducts} from "../productsApiClient";
+import {addQuantity, createProduct, getProducts} from "../productsApiClient";
 
 describe('productsApiClient', () => {
     describe('getProducts', () => {
@@ -29,4 +29,15 @@ describe('productsApiClient', () => {
             expect(response.quantity).toEqual(0);
         });
     });
+
+    describe('addQuantity', () => {
+        it('should make a POST request to add more quantity to a product', async () => {
+            const updatedProductQuantity = [{id: 1, name: 'first-product', quantity: 3}];
+            nock('http://localhost').post('/addQuantity/1/3').reply(200, updatedProductQuantity);
+
+            const response = await addQuantity(1, 3)
+
+            expect(response).toEqual(updatedProductQuantity)
+        });
+    })
 });

@@ -17,9 +17,9 @@ class ProductController(private val productService: ProductService) {
         return productService.addProduct(product)
     }
 
-    @GetMapping("/hi")
-    fun sayHi(): String {
-        return "hi"
+    @PostMapping("/addQuantity/{productId}/{quantity}")
+    fun addQuantity(@PathVariable productId: Long, @PathVariable quantity: Int): Product {
+        return productService.addQuantity(productId, quantity)
     }
 }
 
