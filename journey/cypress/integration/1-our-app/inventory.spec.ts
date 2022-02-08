@@ -26,11 +26,11 @@ describe("inventory", () => {
       cy.findByLabelText("Order Amount").contains('2')
       cy.findByRole('button', {name: "Less"}).click()
       cy.findByRole('button', {name: "Place Order"}).click()
-      cy.findByRole('alert').contains('Congrats you ordered 1 of shiny-new-product')
+      cy.findByRole('alert').contains('You will receive - shiny-new-product x 1.')
       cy.findByRole('button', {name: 'Close'}).click()
     });
 
-    it.only('should partially fulfill an order ', () => {
+    it('should partially fulfill an order ', () => {
       cy.visit("http://localhost:8080");
       addProduct("shiny-new-product");
       cy.findByRole('button', {name: "Increase"}).click()
@@ -38,7 +38,7 @@ describe("inventory", () => {
       cy.findByRole('button', {name: "More"}).click()
       cy.findByRole('button', {name: "More"}).click()
       cy.findByRole('button', {name: "Place Order"}).click()
-      cy.findByRole('alert').contains('your order was partially fill with 1 of shiny-new-product')
+      cy.findByRole('alert').contains('You will receive - shiny-new-product x 1.\nNote that your order was NOT completely fulfilled. Your delivery will be short 1 items.')
       cy.findByRole('button', {name: 'Close'}).click()
     });
 

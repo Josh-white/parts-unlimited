@@ -103,7 +103,7 @@ describe('ordering', () => {
     act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
 
     expect(createAlertMessage).toHaveBeenCalledTimes(1)
-    expect(createAlertMessage).toHaveBeenCalledWith('Congrats you ordered 1 of a product')
+    expect(createAlertMessage).toHaveBeenCalledWith('You will receive - a product x 1.')
     expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
     expect(mockChangeQuantity).toHaveBeenCalledWith(1, 1)
   });
@@ -120,7 +120,8 @@ describe('ordering', () => {
     act(() => userEvent.click(screen.getByRole('button', {name: 'Place Order'})))
 
     expect(createAlertMessage).toHaveBeenCalledTimes(1)
-    expect(createAlertMessage).toHaveBeenCalledWith('your order was partially fill with 2 of a product')
+    expect(createAlertMessage).toHaveBeenCalledWith('You will receive - a product x 2.\n' +
+      'Note that your order was NOT completely fulfilled. Your delivery will be short 1 items.')
     expect(mockChangeQuantity).toHaveBeenCalledTimes(1)
     expect(mockChangeQuantity).toHaveBeenCalledWith(1, 0)
 

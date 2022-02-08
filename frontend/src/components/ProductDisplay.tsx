@@ -28,9 +28,9 @@ export const ProductDisplay = ({product, createAlertMessage}: ProductDisplayProp
     }
   }
 
-  function orderPlaced(orderedAmount: number, productName: string, remainingInventory: boolean) {
-    remainingInventory ? createAlertMessage(`Congrats you ordered ${orderedAmount} of ${productName}`) :
-      createAlertMessage(`your order was partially fill with ${orderedAmount} of ${productName}`)
+  function orderPlaced(orderedAmount: number, productName: string, remainingInventory: boolean, notDelivered?: number) {
+    remainingInventory ? createAlertMessage(`You will receive - ${productName} x ${orderedAmount}.`) :
+      createAlertMessage(`You will receive - ${productName} x ${orderedAmount}.\nNote that your order was NOT completely fulfilled. Your delivery will be short ${notDelivered} items.`)
   }
 
   const placeOrder = () => {
@@ -38,11 +38,12 @@ export const ProductDisplay = ({product, createAlertMessage}: ProductDisplayProp
       const newQuantity = quantity - orderAmount
       changeQuantity(product.id, newQuantity)
         .then(() => setQuantity(newQuantity))
-        orderPlaced(newQuantity, product.name, true)
+      orderPlaced(newQuantity, product.name, true)
     } else if (orderAmount >= quantity) {
+      const notDelivered = orderAmount - quantity
       changeQuantity(product.id, 0)
         .then(() => setQuantity(0))
-      orderPlaced(quantity, product.name, false)
+      orderPlaced(quantity, product.name, false, notDelivered)
     }
   }
 
