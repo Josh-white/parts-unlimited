@@ -11,11 +11,10 @@ export const ProductCreator = ({refresh}: ProductCreatorProps) => {
   const setProductNameFromInput = (event: FormEvent<HTMLInputElement>) => {
     setProductName(event.currentTarget.value);
   };
+
   const submitForm = (event: FormEvent) => {
     event.preventDefault();
-    createProduct(productName).then(() => {
-      refresh();
-    });
+    createProduct(productName).then(() => refresh());
   };
   return (
 

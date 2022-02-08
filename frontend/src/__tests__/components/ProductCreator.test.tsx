@@ -22,6 +22,6 @@ describe("when I add a new product", () => {
     addProduct("shiny new product");
 
     expect(mockCreateProduct).toHaveBeenCalledWith("shiny new product");
-    expect(mockRefresh).toHaveBeenCalledTimes(1)
+    expect(await mockRefresh).toHaveBeenCalledTimes(1)
   });
 });

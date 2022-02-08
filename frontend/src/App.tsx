@@ -29,14 +29,17 @@ const App = () => {
           <Box ml={2}>
             <h2>Quantity</h2>
           </Box>
-          <Box ml={2}>
+          <Box ml={5}>
             <h2>Add Quantity</h2>
           </Box>
-          <Box display='flex' flexDirection='row'>
-          {products.map((product) => (
-            <ProductDisplay product={product}/>
-          ))}
+          <Box ml={5}>
+            <h2>Place Order</h2>
           </Box>
+        </Box>
+        <Box>
+          {products.map((product) => (
+            <ProductDisplay key={product.id} product={product}/>
+          ))}
         </Box>
         <Box display='flex' flexDirection='row'>
           <Box>

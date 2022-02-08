@@ -1,15 +1,14 @@
 import React from "react";
-import {render, screen} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import App from "../App";
 import {getProducts} from "../productsApiClient";
-import {verify} from "crypto";
 
 jest.mock("../productsApiClient");
 
 const mockGetProducts = getProducts as jest.MockedFunction<typeof getProducts>;
 
 describe("App", () => {
-  it('should render the headers', () => {
+  it('should render the headers', async () => {
     mockGetProducts.mockResolvedValueOnce([
       {
         id: 1,
@@ -21,9 +20,18 @@ describe("App", () => {
         name: "crusty old product",
         quantity: 3
       }]);
-    render(<App/>)
+
+    await waitFor(() => {
+      render(<App/>)
+    })
+
     expect(screen.getByText("Parts Unlimited Inventory")).toBeInTheDocument();
     expect(screen.getByText("Product Creator")).toBeVisible()
-    expect(mockGetProducts).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("Product")).toBeVisible()
+    expect(screen.getByText("Quantity")).toBeVisible()
+    expect(screen.getByText("Add Quantity")).toBeVisible()
+    expect(screen.getByText("Place Order")).toBeVisible()
+
+    expect(await mockGetProducts).toHaveBeenCalledTimes(1)
   });
 });
