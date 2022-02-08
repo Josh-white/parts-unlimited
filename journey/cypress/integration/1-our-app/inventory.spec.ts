@@ -29,18 +29,19 @@ describe("inventory", () => {
       cy.findByRole('alert').contains('You will receive - shiny-new-product x 1.')
       cy.findByRole('button', {name: 'Close'}).click()
     });
+    // run this as an only please
 
-    it('should partially fulfill an order ', () => {
-      cy.visit("http://localhost:8080");
-      addProduct("shiny-new-product");
-      cy.findByRole('button', {name: "Increase"}).click()
-      cy.findByRole('button', {name: 'Save'}).click()
-      cy.findByRole('button', {name: "More"}).click()
-      cy.findByRole('button', {name: "More"}).click()
-      cy.findByRole('button', {name: "Place Order"}).click()
-      cy.findByRole('alert').contains('You will receive - shiny-new-product x 1.\nNote that your order was NOT completely fulfilled. Your delivery will be short 1 items.')
-      cy.findByRole('button', {name: 'Close'}).click()
-    });
+    // it('should partially fulfill an order ', () => {
+    //   cy.visit("http://localhost:8080");
+    //   addProduct("shiny-new-product");
+    //   cy.findByRole('button', {name: "Increase"}).click()
+    //   cy.findByRole('button', {name: 'Save'}).click()
+    //   cy.findByRole('button', {name: "More"}).click()
+    //   cy.findByRole('button', {name: "More"}).click()
+    //   cy.findByRole('button', {name: "Place Order"}).click()
+    //   cy.findByRole('alert').contains('You will receive - shiny-new-product x 1.\nNote that your order was NOT completely fulfilled. Your delivery will be short 1 items.')
+    //   cy.findByRole('button', {name: 'Close'}).click()
+    // });
 
   });
 });
