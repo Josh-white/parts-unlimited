@@ -16,7 +16,8 @@ describe("when I view the inventory", () => {
     render(<ProductDisplay product={product}/>);
 
     expect(await screen.findByText("a product")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
+    const currentInventory = await screen.getAllByLabelText('Current Inventory')
+    expect(currentInventory[0].innerHTML).toContain('0')
   });
 
   it('should display a button to increase the quantity and save amount', () => {
@@ -34,7 +35,8 @@ describe("when I view the inventory", () => {
     const product = {id: 1, name: "a product", quantity: 0};
     render(<ProductDisplay product={product}/>);
 
-    expect(screen.getByText("0")).toBeVisible()
+    const currentInventory = await screen.getAllByLabelText('Current Inventory')
+    expect(currentInventory[0].innerHTML).toContain('0')
     userEvent.click(screen.getByRole('button', {name: 'Increase'}))
     expect(await screen.getByText('1')).toBeVisible()
   });
@@ -50,14 +52,39 @@ describe("when I view the inventory", () => {
     expect(mockAddQuantity).toHaveBeenCalledTimes(1)
   });
 
-  it('should show a default amount and buttons to increase, decrease, and place order', () => {
+  it('should show a default amount and buttons to increase, decrease, and place order', async () => {
     const product = {id: 1, name: "a product", quantity: 2};
 
     render(<ProductDisplay product={product}/>);
 
-    expect(screen.getByText("0")).toBeVisible()
+    const orderAmount = await screen.findAllByLabelText('Order Amount')
+    expect(orderAmount[0].innerHTML).toContain('Order 0')
     expect(screen.getByRole('button', {name: 'More'})).toBeVisible()
     expect(screen.getByRole('button', {name: 'Less'})).toBeVisible()
     expect(screen.getByRole('button', {name: 'Place Order'})).toBeVisible()
+  });
+
+  it('should change order amount when more or less is clicked', async () => {
+    const product = {id: 1, name: "a product", quantity: 2};
+
+    render(<ProductDisplay product={product}/>);
+
+    userEvent.click(screen.getByRole('button', {name: 'More'}))
+    const orderAmount = await screen.findAllByLabelText('Order Amount')
+    expect(orderAmount[0].innerHTML).toContain('Order 1')
+    userEvent.click(screen.getByRole('button', {name: 'Less'}))
+    expect(orderAmount[0].innerHTML).toContain('Order 0')
+  });
+
+  it('should not allow order amount to go below 0', async () => {
+    const product = {id: 1, name: "a product", quantity: 2};
+
+    render(<ProductDisplay product={product}/>);
+    userEvent.click(screen.getByRole('button', {name: 'Less'}))
+
+    const orderAmount = await screen.findAllByLabelText('Order Amount')
+    expect(orderAmount[0].innerHTML).toContain('Order 0')
+
+
   });
 });

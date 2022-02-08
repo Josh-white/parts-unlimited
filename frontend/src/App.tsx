@@ -32,7 +32,7 @@ const App = () => {
           <Box ml={5}>
             <h2>Add Quantity</h2>
           </Box>
-          <Box ml={5}>
+          <Box ml={40}>
             <h2>Place Order</h2>
           </Box>
         </Box>
