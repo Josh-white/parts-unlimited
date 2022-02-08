@@ -27,6 +27,19 @@ describe("inventory", () => {
       cy.findByRole('button', {name: "Less"}).click()
       cy.findByRole('button', {name: "Place Order"}).click()
       cy.findByRole('alert').contains('Congrats you ordered 1 of shiny-new-product')
+      cy.findByRole('button', {name: 'Close'}).click()
+    });
+
+    it.only('should partially fulfill an order ', () => {
+      cy.visit("http://localhost:8080");
+      addProduct("shiny-new-product");
+      cy.findByRole('button', {name: "Increase"}).click()
+      cy.findByRole('button', {name: 'Save'}).click()
+      cy.findByRole('button', {name: "More"}).click()
+      cy.findByRole('button', {name: "More"}).click()
+      cy.findByRole('button', {name: "Place Order"}).click()
+      cy.findByRole('alert').contains('your order was partially fill with 1 of shiny-new-product')
+      cy.findByRole('button', {name: 'Close'}).click()
     });
 
   });

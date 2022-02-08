@@ -8,7 +8,7 @@ import {ProductDisplay} from "./components/ProductDisplay";
 const App = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [dirtyState, setDirtyState] = useState(0)
-  const [alert, setAlert] = useState(false)
+  const [successAlert, setSuccessAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
 
   const refresh = () => {
@@ -17,7 +17,7 @@ const App = () => {
 
   const createAlertMessage = (message: string) => {
     setAlertMessage(message)
-    setAlert(true)
+    setSuccessAlert(true)
   }
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const App = () => {
           ))}
         </Box>
         <Box>
-          {alert ? <Alert onClose={() => setAlert(false)} variant={"filled"} severity={"success"}> {alertMessage}</Alert> : <></>}
+          {successAlert ? <Alert onClose={() => setSuccessAlert(false)} variant={"filled"} severity={"success"}> {alertMessage}</Alert> : <></>}
         </Box>
         <Box display='flex' flexDirection='row'>
           <Box>
