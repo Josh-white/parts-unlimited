@@ -27,8 +27,13 @@ const App = () => {
   return (
     <Container sx={{mx: 1, my: 1}}>
       <h1>Parts Unlimited Inventory</h1>
-      {/*TODO figure out how to get these into two columns*/}
       <Box>
+        <Box display='flex' flexDirection='row'>
+          <Box>
+            <h2>Product Creator</h2>
+            <ProductCreator refresh={refresh}/>
+          </Box>
+        </Box>
         <Box display='flex' flexDirection='row'>
           <Box alignItems={"center"}>
             <h2>Product</h2>
@@ -50,12 +55,6 @@ const App = () => {
         </Box>
         <Box>
           {successAlert ? <Alert onClose={() => setSuccessAlert(false)} variant={"filled"} severity={"success"}> {alertMessage}</Alert> : <></>}
-        </Box>
-        <Box display='flex' flexDirection='row'>
-          <Box>
-            <h2>Product Creator</h2>
-            <ProductCreator refresh={refresh}/>
-          </Box>
         </Box>
       </Box>
     </Container>
